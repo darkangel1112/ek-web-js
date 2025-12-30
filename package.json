@@ -1,0 +1,16 @@
+{
+  "name": "ek_web_js",
+  "version": "1.0.0",
+  "description": "Mezőgazdasági Adatkinyerő Webalkalmazás (JS)",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix server\" \"npm run dev --prefix client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
