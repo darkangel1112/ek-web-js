@@ -21,9 +21,7 @@ function App() {
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col shadow-2xl z-10">
         <div className="p-6 flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30">
-            <span className="text-2xl">🌾</span>
-          </div>
+          <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain rounded-lg" />
           <div>
             <h1 className="font-bold text-lg leading-tight">Adatkinyerő</h1>
             <p className="text-xs text-slate-400">v7.5 Final</p>
@@ -95,8 +93,8 @@ function App() {
 
 const NavItem = ({ icon, label, active, onClick }) => (
   <button onClick={onClick} className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${active
-      ? "bg-brand-600 text-white shadow-lg shadow-brand-500/30"
-      : "text-slate-400 hover:bg-slate-800 hover:text-white"
+    ? "bg-brand-600 text-white shadow-lg shadow-brand-500/30"
+    : "text-slate-400 hover:bg-slate-800 hover:text-white"
     }`}>
     {icon}
     {label}

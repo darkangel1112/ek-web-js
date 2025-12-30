@@ -21,36 +21,42 @@ const extractApplicantData = (fullText) => {
 };
 
 const extractSupportRequests = (fullText) => {
-    // Looks for 'q4' which represents a checkbox in some PDF encodings
     const checkedItems = [];
 
-    // Pattern: q4 followed by text
-    const pattern = /q4\s+([^\n\rq]+)/g;
+    // Find the relevant section to avoid false positives from other pages
+    const sectionStart = fullText.indexOf("Támogatási/kifizetési igények");
+    if (sectionStart === -1) return [];
+
+    // Search only the next ~5000 characters or until next major section
+    const sectionEnd = fullText.indexOf("Kérelemben szereplő táblák", sectionStart);
+    const searchArea = sectionEnd !== -1
+        ? fullText.substring(sectionStart, sectionEnd)
+        : fullText.substring(sectionStart, sectionStart + 5000);
+
+    // Pattern: q followed by optional whitespace, then 4, then whitespace, then text
+    const pattern = /q\s*4\s+([^\n\rq]+)/g;
 
     let match;
-    while ((match = pattern.exec(fullText)) !== null) {
+    while ((match = pattern.exec(searchArea)) !== null) {
         let cleanLine = match[1].trim().replace(/\s+/g, ' ');
-        if (cleanLine.length > 3) {
-            checkedItems.push(cleanLine);
+
+        // Skip metadata and sub-choices
+        const isMetadata = cleanLine.includes(':') ||
+            cleanLine.includes('Natura 2000') ||
+            cleanLine.startsWith('AÖP') ||
+            cleanLine.startsWith('Poligon');
+
+        const isMainAOP = cleanLine.startsWith("Agro-ökológiai Program");
+
+        if (cleanLine.length > 5 && (isMainAOP || !isMetadata)) {
+            // Normalize main AÖP name
+            const finalName = isMainAOP ? "Agro-ökológiai Program" : cleanLine;
+            checkedItems.push(finalName);
         }
     }
 
-    // Fallback: line by line
-    if (checkedItems.length === 0) {
-        const lines = fullText.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].trim().startsWith('q4')) {
-                if (i + 1 < lines.length) {
-                    const nextLine = lines[i + 1].trim();
-                    if (nextLine.length > 3 && !nextLine.startsWith('q')) {
-                        checkedItems.push(nextLine);
-                    }
-                }
-            }
-        }
-    }
-
-    return checkedItems;
+    // Deduplicate the whole list
+    return [...new Set(checkedItems)];
 };
 
 const createAnalysisReport = (processedData, fullText) => {

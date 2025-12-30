@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DataTable from './DataTable';
 import { exportData } from '../services/api';
 import { FileDown, FileSpreadsheet, FileArchive, Check, Layers, Sprout, Wheat } from 'lucide-react';
-import { saveAs } from 'file-saver'; // Requires npm install file-saver -- handled
+import { saveAs } from 'file-saver';
 
 const AnalysisDashboard = ({ results }) => {
     const fileKeys = Object.keys(results);
@@ -27,7 +27,7 @@ const AnalysisDashboard = ({ results }) => {
             const filename = `${filenameStr}.${ext}`;
 
             const blob = await exportData(type, payloadData, filename);
-            saveAs(blob, filename); // Trigger download
+            saveAs(blob, filename);
         } catch (e) {
             console.error("Export failed", e);
             alert("Hiba a letöltés során");
@@ -39,7 +39,6 @@ const AnalysisDashboard = ({ results }) => {
         { id: 'summary', label: 'Összefoglaló', icon: <Layers size={18} /> },
         { id: 'fovetes', label: 'Fővetés', icon: <Wheat size={18} /> },
         { id: 'masodvetes', label: 'Másodvetés', icon: <Sprout size={18} /> },
-        // { id: 'stats', label: 'Statisztikák', icon: <BarChart3 size={18} /> },
     ];
 
     if (!data) return null;
@@ -55,7 +54,7 @@ const AnalysisDashboard = ({ results }) => {
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <label className="text-sm font-medium text-slate-500 whitespace-nowrap">Kiválasztott fájl:</label>
                     <select
-                        className="form-select block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm rounded-md"
+                        className="form-select block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
                         value={selectedFileKey}
                         onChange={(e) => setSelectedFileKey(e.target.value)}
                     >
@@ -78,7 +77,7 @@ const AnalysisDashboard = ({ results }) => {
                 <div className="md:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 text-white shadow-lg">
                     <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Kérelmező Adatok</h3>
                     <div className="text-2xl font-bold mb-1">{applicant_info.name}</div>
-                    <div className="text-brand-400 font-mono text-sm bg-brand-900/30 px-2 py-1 rounded inline-block">
+                    <div className="text-green-400 font-mono text-sm bg-green-900/30 px-2 py-1 rounded inline-block">
                         {applicant_info.mak_id}
                     </div>
                 </div>
@@ -95,12 +94,12 @@ const AnalysisDashboard = ({ results }) => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center gap-2 px-6 py-4 text-sm font-medium transition-colors relative
-                                ${activeTab === tab.id ? 'text-brand-600 bg-white' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
+                                ${activeTab === tab.id ? 'text-green-700 bg-white' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
                         >
                             {tab.icon}
                             {tab.label}
                             {activeTab === tab.id && (
-                                <div className="absolute top-0 left-0 right-0 h-0.5 bg-brand-500" />
+                                <div className="absolute top-0 left-0 right-0 h-0.5 bg-green-600" />
                             )}
                         </button>
                     ))}
@@ -118,7 +117,7 @@ const AnalysisDashboard = ({ results }) => {
                                         { header: 'Eredeti (ha)', accessor: 'teruletEredeti', render: r => fmt(r.teruletEredeti), className: 'text-right' },
                                         { header: 'Fővetés (ha)', accessor: 'fovetesSzamitott', render: r => fmt(r.fovetesSzamitott), className: 'text-right' },
                                         { header: 'Másodvetés (ha)', accessor: 'masodvetesSzamitott', render: r => fmt(r.masodvetesSzamitott), className: 'text-right' },
-                                        { header: 'Összesen (ha)', accessor: 'osszesenSzamitott', render: r => fmt(r.osszesenSzamitott), className: 'text-right font-bold text-brand-600' },
+                                        { header: 'Összesen (ha)', accessor: 'osszesenSzamitott', render: r => fmt(r.osszesenSzamitott), className: 'text-right font-bold text-green-700' },
                                     ]}
                                     data={data.analysis_data.summary_df}
                                     totalRow={totals}
@@ -128,7 +127,7 @@ const AnalysisDashboard = ({ results }) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <h5 className="font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                        <Check className="text-brand-500" size={16} /> Agrotechnikai műveletek
+                                        <Check className="text-green-600" size={16} /> Agrotechnikai műveletek
                                     </h5>
                                     <ul className="bg-slate-50 rounded-lg border border-slate-200 divide-y divide-slate-100">
                                         {(stats.agrotechnics || []).map((item, i) => (
@@ -138,7 +137,7 @@ const AnalysisDashboard = ({ results }) => {
                                 </div>
                                 <div>
                                     <h5 className="font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                        <Check className="text-brand-500" size={16} /> Támogatási igények
+                                        <Check className="text-green-600" size={16} /> Támogatási igények
                                     </h5>
                                     <ul className="bg-slate-50 rounded-lg border border-slate-200 divide-y divide-slate-100">
                                         {(stats.support_requests || []).map((item, i) => (
@@ -210,7 +209,7 @@ const ExportButton = ({ icon, label, onClick, primary, disabled }) => (
         disabled={disabled}
         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
             ${primary
-                ? "bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-500/20"
+                ? "bg-green-700 text-white hover:bg-green-800 shadow-lg shadow-green-900/20"
                 : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"}
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}
         `}
